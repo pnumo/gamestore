@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+	{% load static %}
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js">
+	</script>
+
+	<meta charset="utf-8">
+	<title>WEBO-Project-AVA</title>
+
+    <!-- Mobile Specific Metas
+  ================================================== -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link rel="stylesheet" href="{% static "style.css" %}">
+  <link rel="stylesheet" href="{% static "responsive.css" %}">
+
+	<!--[if lt IE 8]>
+       <div style=' clear: both; text-align:center; position: relative;'>
+         <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+           <img src="http://storage.ie6countdown.com/assets/100/images/banners/warning_bar_0000_us.jpg" border="0" height="42" width="820" alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today." />
+        </a>
+      </div>
+    <![endif]-->
+    <!--[if lt IE 9]>
+		<script src="js/html5.js"></script>
+		<script src="js/css3-mediaqueries.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+<header>
+	<div class="wrap-header grid">
+		<div id="logo"><a href="/"><img alt="logo" src="{% static "images/logo.png" %}"/></a></div>
+		<nav>
+			<div class="wrap-nav">
+				<div class="menu">
+					<ul>
+						<li><a href="/">Home</a></li>
+						{% if not request.user.userprofile.is_a_developer %}
+						<li><a href="/games/">All Games</a></li>
+						{% endif %}
+						{% if request.user.userprofile.is_a_developer %}
+						<li><a href="/games/">My Games</a></li>
+						<li><a href="/addgame/">Add game</a></li>
+						{% endif %}
+						{% if request.user.is_authenticated %}
+						<li><a href="/profile/">My profile</a></li>
+						<li><a href="/logout/">Logout</a></li>
+						{% else %}
+						<li><a href="/login/">Login</a></li>
+						<li><a href="/register/">Register</a></li>
+						{% endif %}
+					</ul>
+				</div>
+
+				<div class="minimenu"><div>MENU</div>
+					<select onchange="location=this.value">
+
+						<option value="/">Home</option>
+						{% if not request.user.userprofile.is_a_developer %}
+						<option value="/games/">All games</option>
+						{% endif %}
+						{% if request.user.userprofile.is_a_developer %}
+						<option value="/games/">My Games</option>
+						<option value="/addgame/">Add game</option>
+						{% endif %}
+						{% if request.user.is_authenticated %}
+						<option value="/profile/">My Profile</option>
+						<option value="/logout/">Logout</option>
+						{% else %}
+						<option value="/Login/">Login</option>
+						<option value="/register/">Register</option>
+						{% endif %}
+					</select>
+				</div>
+			</div>
+		</nav>
+	</div>
+</header>
+
+<div id="content">
+	<div class="wrap-content grid">
+		<div class="row block01">
+			{% block content %}
+			<h1>Javascript gamestore - Sample of available games</h1>
+			{% if not request.user.is_authenticated %}
+			<h2>Login to access the games</h2>
+			{% endif %}
+			{% for onegame in games %}
+
+	        <div class="col-1-4">
+	        <div class="wrap-col">
+	            {% if onegame.image != '0'%}
+	            <img src="/static/uploaded_files/{{onegame.image}}" />
+	            {% else %}
+	            <img alt=" {{onegame.name}} banner"src="{% static "images/testgame.jpg" %}" />
+	            {% endif %}
+	            <h2>{{onegame.name}}</h2>
+	            {% if request.user.is_authenticated and not request.user.userprofile.is_a_developer %}
+	            <a class="button" href="/games/{{onegame.id}}/">Play</a>
+	          	{% endif %}
+	        </div>
+	        </div>
+
+	    {% endfor %}
+			{% endblock %}
+		</div>
+
+	</div>
+</div>
+
+<footer>
+	<div class="wrap-footer grid">
+		<div class="row">
+			<div class="col-full">
+				<div class="wrap-col">
+						<div class="heading">
+							<h2>About</h2>
+						</div>
+
+						<p>This game store has been built for WEB programming course at
+							 Tampere University of Technology using Django 1.8 framework.</p>
+				</div>
+			</div>
+
+		</div>
+		<div class="copyright">
+			<p>Copyright © 2016 - Antti Lahti, Ville Rintamäki, Atte Haapanen</p>
+		</div>
+	</div>
+</footer>
+
+</body>
+</html>

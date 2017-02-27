@@ -1,0 +1,51 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+
+
+  {% if request.user.userprofile.is_a_developer %}
+    <h1>My Games</h1>
+
+    {% for onegame in games %}
+      {% if request.user == onegame.owner %}
+        <div class="col-1-4">
+        <div class="wrap-col">
+            {% if onegame.image != '0'%}
+            <img alt=" {{onegame.name}} banner" src="/static/uploaded_files/{{onegame.image}}" />
+            {% else %}
+            <img alt=" {{onegame.name}} banner" src="{% static "images/testgame.jpg" %}" />
+            {% endif %}
+            <h2>{{onegame.name}}</h2>
+            <a class="button" href="/games/{{onegame.id}}/">Modify</a>
+        </div>
+        </div>
+      {% endif %}
+
+    {% endfor %}
+
+  {% else %}
+    <h1>All games</h1>
+
+    {% for onegame in games %}
+
+        <div class="col-1-4">
+        <div class="wrap-col">
+            {% if onegame.image != '0'%}
+            <img alt=" {{onegame.name}} banner" src="/static/uploaded_files/{{onegame.image}}" />
+            {% else %}
+            <img alt=" {{onegame.name}} banner" src="{% static "images/testgame.jpg" %}" />
+            {% endif %}
+            <h2>{{onegame.name}}</h2>
+            {% if request.user.is_authenticated %}
+            <a class="button" href="/games/{{onegame.id}}/">Play</a>
+            {% else %}
+            <a class="button" href="/login/">Login</a>
+            {% endif %}
+        </div>
+        </div>
+
+    {% endfor %}
+
+  {% endif %}
+
+{% endblock %}

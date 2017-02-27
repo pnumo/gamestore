@@ -1,0 +1,118 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+
+<h1>{{ onegame.name }}</h1>
+
+<script>
+	var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+	var eventer = window[eventMethod];
+	var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+	eventer(messageEvent, function(e) {
+		var gamename = "{{onegame.name}}";
+		var  user = "{{request.user}}";
+		var game = "{{onegame}}";
+		console.log("User: " + user);
+
+		if (e.data["messageType"] == "SCORE" ) {
+			var score = JSON.stringify(e.data["score"]);
+			console.log("Highscore: " + e.data["score"]);
+
+			$.ajax({
+				url:'/submit_highscore/',
+				type:"POST",
+				data:{game:gamename, score:score, user:user},
+				success:function(response){
+					$("#globalscores").load(location.href + " #globalscores");
+				},
+				error:function(xhr, ajaxOptions, thrownError){}
+			});
+		} else if(e.data['messageType'] == "SAVE"){
+			var playerItems = JSON.stringify(e.data["gameState"]["playerItems"]);
+			var playerScore = e.data["gameState"]["score"];
+			console.log("Saved items: " + playerItems)
+			console.log("Saved score: " + playerScore)
+
+			$.ajax({
+				url:'/save_state/',
+				type:"POST",
+				data:{game:gamename, savedata:playerItems, score:playerScore},
+				success:function(response){
+					$("#save_state").load(location.href + " #save_state");
+				},
+				error:function(xhr, ajaxOptions, thrownError){}
+			});
+		} else if(e.data['messageType'] == "LOAD_REQUEST"){
+			$.ajax({
+				url:'/load_state/',
+				type:"GET",
+				data:{game:gamename},
+				success:function(result){
+					result = JSON.parse(result);
+					result["gameState"]["playerItems"] = JSON.parse(result["gameState"]["playerItems"]);
+
+					var game_window = document.getElementById("iframe").contentWindow;
+					game_window.postMessage(result, "*");
+				}
+			});
+		}
+	},false);
+</script>
+
+<iframe height="600px" width="600px" src="{{onegame.url}}" id="iframe"></iframe>
+
+{% if request.user == onegame.owner %}
+
+<div id="loginform">
+	<form action="./update_game/">
+		<input type="submit" value="Edit game">
+
+	</form>
+  <form action="/deletegame/{{onegame.id}}/" method="post">{% csrf_token %}
+
+  <input type="submit" name="submit "value="Delete game" /></p>
+  </form>
+</div>
+
+{% endif %}
+{% else %}
+
+<h1>Login required</h1>
+<p>Please <a href="/login/">login</a> to play the game. </p>
+
+{% endif %}
+
+<h1>Highscores</h1>
+<div id="globalscores">
+
+	<h2>Global scores</h2>
+	{% if globalscores %}
+		{% for i in globalscores %}
+		{% if i.score > "0" %}
+			{% if forloop.counter <= 10 %}
+			<p>
+				<b>{{forloop.counter}}.</b>
+				Name: <b>{{i.player}}</b>
+				Score: <b>{{i.score}}</b>
+			</p>
+			{% endif %}
+		{% endif %}
+		{% endfor %}
+
+	<br>
+	<h2>Your top score</h2>
+		{% if my_best_score > 0 %}
+			<p><b>{{request.user.username}}</b>'s top score is <b>{{my_best_score}}</b></p>
+		{% else %}
+			<p>You don't have highscore for this game yet.</p>
+		{% endif %}
+
+	{% else %}
+		<br>
+		<h3>There are no highscores available for this game.</h3>
+	{% endif %}
+</div>
+
+{% endblock %}

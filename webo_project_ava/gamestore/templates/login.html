@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+    {% if form.errors %}
+      <p class="error">Wrong username or password</p>
+      {% endif %}
+
+      <div id=loginform>
+        <form action="/auth/" method="post" > {% csrf_token %}
+          <label for="username">User name:</label>
+          <input type="text" name="username" value="" id="username">
+          <label for="password">Password:</label>
+          <input type="password" name="password" value="" id="password">
+          <input type="submit" value="login" />
+        </form>
+      </div>
+
+      <p>Dont have an account? Click <a href="/register/">here</a> to register. </p>
+
+{% endblock %}

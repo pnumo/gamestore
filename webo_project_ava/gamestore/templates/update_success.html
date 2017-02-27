@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+  <h2>Your profile has been updated</h2>
+
+  <div class="block02">
+
+    <p> You will be redirected to your profile... </p>
+  </div>
+
+  <script type="text/javascript">
+    (function(){
+   setTimeout(function(){
+     window.location="/profile/";
+   },2000);
+})();
+</script>
+{% else %}
+
+<h1>Login required</h1>
+<p>Please <a href="/login/">login</a> to see your profile. </p>
+
+{% endif %}
+{% endblock %}

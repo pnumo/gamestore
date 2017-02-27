@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+  <h1> Hello {{full_name}}, you have logged in successfully! </h1>
+
+  <div class="block02">
+
+    <p> You will be redirected to front page... or </p>
+    <p>Click <a href="/logout/">here</a> to log out. </p>
+  </div>
+
+  <script type="text/javascript">
+    (function(){
+   setTimeout(function(){
+     window.location="/";
+   },2000);
+})();
+</script>
+
+{% endblock %}

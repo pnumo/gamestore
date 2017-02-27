@@ -1,0 +1,37 @@
+html {
+}
+
+
+img{
+	max-width:100%;
+	height: auto;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+
+
+}
+
+@media only screen and (max-width: 767px) {
+
+	header {margin-top: 0px;height:150px;}
+	header #logo{top:60px;}
+
+	nav .wrap-nav{top: 10px; left:10px; right:auto;}
+
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+}
+
+@media only screen and (max-width: 479px) {
+
+	header{height: 170px;}
+	header #logo{top: 90px;}
+
+	nav .wrap-nav {position:relative; height: 37px; left:0px; top:0px;}
+	.menu{display:none;}
+	.minimenu{display:block;}
+
+}

@@ -1,0 +1,23 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% if request.user.is_authenticated and request.user == instance.owner %}
+
+  <h1>Edit game</h1>
+  <div id=loginform>
+    <form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
+
+        <ul>
+        {{form.as_ul}}
+        </ul>
+              <input type="submit" value="Edit game"/>
+
+  </form>
+
+</div>
+{% else %}
+
+<p> No permission</p>
+
+{% endif %}
+{% endblock %}

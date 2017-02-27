@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+{% if request.user.is_authenticated and request.user.userprofile.is_a_developer %}
+
+<h1>Add game</h1>
+<p>You need to provide a name, URL and banner image for your game.</p>
+<p>Therefore, you need to host your game elsewhere and provide a link to that external HTML document.</p>
+
+<div id=loginform>
+  <form action="/addgame/" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+    <ul>{{form.as_ul}}</ul>
+
+    <input type="submit" name="submit "value="Add game" /></p>
+  </form>
+</div>
+
+{% elif request.user.is_authenticated %}
+
+<h1>No permission</h1>
+<p>You must be a developer to add games. </p>
+
+{% else %}
+
+<h1>Login required</h1>
+<p>Please <a href="/login/">login</a> to submit a game. </p>
+
+{% endif %}
+
+
+{% endblock %}
